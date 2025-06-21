@@ -1,4 +1,4 @@
-function InputWorkerHours({ worker, addStartHours, addEndHours, addWorkerRate }) {
+function WorkerCards({ worker, addStartHours, addEndHours, addWorkerRate }) {
     const hours = Math.floor(worker.totalHours);
     const minutes = Math.round((worker.totalHours - hours) * 60);
     return (
@@ -50,5 +50,5 @@ function InputWorkerHours({ worker, addStartHours, addEndHours, addWorkerRate })
         </div>
     );
 }
-export default InputWorkerHours;
+export default WorkerCards;
   

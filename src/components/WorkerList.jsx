@@ -1,8 +1,8 @@
-import useWorkers from '../hooks/useWorkers'; // ✅ твій новий хук
+import useWorkers from '../hooks/useWorkers';
 import InputWorkers from './InputWorkers';
-import InputWorkerHours from './InputWorkerHours';
 import InputCash from './InputCash';
 import TableSalary from './TableSalary';
+import WorkerCards from './WorkerCards';
 function WorkerList() {
     const {
         workers,
@@ -35,7 +35,7 @@ function WorkerList() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                 {workers.map((worker) => (
 
-                    <InputWorkerHours
+                    <WorkerCards
                         key={worker.id}
                         worker={worker}
                         addStartHours={(id, val) => addWorkerHours(id, val, 'start')}
