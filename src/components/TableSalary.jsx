@@ -41,11 +41,11 @@ function TableSalary({ workers, cash }) {
                                 <td className="border px-4 py-2">{worker.name || '—'}</td>
 
                                 <td className="border px-4 py-2">
-                                    {worker.startHours?.trim() ? worker.startHours : 'Не вказано'}
+                                    {worker.startHours ? worker.startHours : 'Не вказано'}
                                 </td>
 
                                 <td className="border px-4 py-2">
-                                    {worker.endHours?.trim() ? worker.endHours : 'Не вказано'}
+                                    {worker.endHours ? worker.endHours : 'Не вказано'}
                                 </td>
 
                                 <td className="border px-4 py-2">

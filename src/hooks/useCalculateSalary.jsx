@@ -13,11 +13,20 @@ const useCalculateSalary = (workers, cash) => {
             return;
         }
 
-        const totalHours = workers.reduce((sum, worker) => sum + worker.totalHours, 0);
-        if (totalHours === 0) {
-            setSalary([]);
-            return;
-        }
+        // Перевірка на коректність введених годин
+        // const totalHours = workers.reduce((sum, worker) => {
+        //     const startHours = parseFloat(worker.startHours) || 0;
+        //     const endHours = parseFloat(worker.endHours) || 0;
+        //     if (startHours < 0 || endHours < 0 || startHours >= endHours) {
+        //         return sum; // Пропускаємо некоректні години
+        //     }
+        //     const hours = endHours - startHours;
+        //     return sum + hours;
+        // }, 0);
+        // if (workers.some(worker => worker.totalHours == null || isNaN(worker.totalHours))) {
+        //     setSalary([]);
+        //     return;
+        // }
 
         const bonusFund = cash * BONUS_PERCENT;
 
