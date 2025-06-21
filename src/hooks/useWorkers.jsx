@@ -40,12 +40,14 @@ const useWorkers = () => {
         };
 
         // Перевірка на коректність введених годин
+
         const startHours = parseFloat(updatedWorker.startHours) || 0;
         const endHours = parseFloat(updatedWorker.endHours) || 0;
         if (startHours < 0 || endHours < 0 || startHours >= endHours) {
           alert('Будь ласка, введіть коректні години роботи');
           return worker; // Повертаємо незмінного працівника
         }
+      
         // Якщо години коректні, оновлюємо працівника
         updatedWorker.startHours = startHours;
         updatedWorker.endHours = endHours;

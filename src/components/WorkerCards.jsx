@@ -54,7 +54,7 @@ function WorkerCards({ worker, addStartHours, addEndHours, addWorkerRate }) {
                 </span>
                 <button
                     onClick={() => addEndHours(worker.id, worker.endHours - 1)}
-                    disabled={worker.endHours <= 8}
+                    disabled={worker.endHours <= 9}
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mt-2"
                 >
                     -

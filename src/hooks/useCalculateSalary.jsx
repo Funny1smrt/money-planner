@@ -1,11 +1,9 @@
-// hooks/useCalculateSalary.jsx
 import { useState, useEffect } from 'react';
 
 const useCalculateSalary = (workers, cash) => {
     const [Salary, setSalary] = useState([]);
 
-         // ставка грн/год
-    const BONUS_PERCENT = 0.05; // 5% від каси
+    const BONUS_PERCENT = 0.05;
 
     useEffect(() => {
         if (!workers || workers.length === 0 || cash <= 0) {
@@ -13,26 +11,31 @@ const useCalculateSalary = (workers, cash) => {
             return;
         }
 
-        // Перевірка на коректність введених годин
-        // const totalHours = workers.reduce((sum, worker) => {
-        //     const startHours = parseFloat(worker.startHours) || 0;
-        //     const endHours = parseFloat(worker.endHours) || 0;
-        //     if (startHours < 0 || endHours < 0 || startHours >= endHours) {
-        //         return sum; // Пропускаємо некоректні години
-        //     }
-        //     const hours = endHours - startHours;
-        //     return sum + hours;
-        // }, 0);
-        // if (workers.some(worker => worker.totalHours == null || isNaN(worker.totalHours))) {
-        //     setSalary([]);
-        //     return;
-        // }
-
         const bonusFund = cash * BONUS_PERCENT;
+
+        // Знаходимо годину початку та завершення всієї зміни
+        const allStart = Math.min(...workers.map(w => w.startHours));
+        const allEnd = Math.max(...workers.map(w => w.endHours));
+        const totalWorkHours = allEnd - allStart;
+
+        const bonusPerHour = bonusFund / totalWorkHours;
+
+        // Створюємо карту бонусів
+        const bonusMap = {};
+
+        for (let h = allStart; h < allEnd; h++) {
+            const presentWorkers = workers.filter(w => w.startHours <= h && w.endHours > h);
+            const bonusPerWorker = presentWorkers.length > 0 ? bonusPerHour / presentWorkers.length : 0;
+
+            for (const w of presentWorkers) {
+                if (!bonusMap[w.id]) bonusMap[w.id] = 0;
+                bonusMap[w.id] += bonusPerWorker;
+            }
+        }
 
         const calculated = workers.map(worker => {
             const baseSalary = worker.totalHours * (worker.rate || 0);
-            const bonus = bonusFund/workers.length;
+            const bonus = bonusMap[worker.id] || 0;
             const total = baseSalary + bonus;
 
             return {
