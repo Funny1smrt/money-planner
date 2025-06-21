@@ -11,29 +11,20 @@ const useCalculateSalary = (workers, cash) => {
             return;
         }
 
-        const bonusFund = cash * BONUS_PERCENT;
-
-        // Створюємо масив усіх хвилин, які працювало кафе (в хвилинах)
-        let allStart = Infinity;
-        let allEnd = -Infinity;
-
-        workers.forEach(worker => {
-            if (worker.startHours && worker.endHours) {
-                const [startH, startM] = worker.startHours.split(':').map(Number);
-                const [endH, endM] = worker.endHours.split(':').map(Number);
-
-                const start = startH * 60 + startM;
-                const end = endH * 60 + endM;
-
-                if (start < allStart) allStart = start;
-                if (end > allEnd) allEnd = end;
-            }
-        });
-
-        if (allStart >= allEnd) {
-            setSalary([]);
-            return;
-        }
+        // Перевірка на коректність введених годин
+        // const totalHours = workers.reduce((sum, worker) => {
+        //     const startHours = parseFloat(worker.startHours) || 0;
+        //     const endHours = parseFloat(worker.endHours) || 0;
+        //     if (startHours < 0 || endHours < 0 || startHours >= endHours) {
+        //         return sum; // Пропускаємо некоректні години
+        //     }
+        //     const hours = endHours - startHours;
+        //     return sum + hours;
+        // }, 0);
+        // if (workers.some(worker => worker.totalHours == null || isNaN(worker.totalHours))) {
+        //     setSalary([]);
+        //     return;
+        // }
 
         const totalMinutes = allEnd - allStart;
         const bonusPerMinute = bonusFund / totalMinutes;
