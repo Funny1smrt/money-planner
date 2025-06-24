@@ -1,6 +1,5 @@
 function WorkerCards({ worker, addStartHours, addEndHours, addWorkerRate }) {
-    const hours = Math.floor(worker.totalHours);
-    const minutes = Math.round((worker.totalHours - hours) * 60);
+
     return (
         <div className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center">
             <h2>{worker.name}</h2>
@@ -21,29 +20,54 @@ function WorkerCards({ worker, addStartHours, addEndHours, addWorkerRate }) {
                 <span className="text-lg font-semibold">Години роботи</span>
                 <br />
                 <p className="text-lg font-semibold">Початок роботи:</p>
-                <input 
-                    type="time"
-                    value={worker.startHours}
-                    onChange={(e) => addStartHours(worker.id, e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-64"
-                />
+                
+                <button
+                    onClick={() => addStartHours(worker.id, worker.startHours + 1)}
+                    disabled={worker.startHours >= 23}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
+
+                >
+                    +
+                </button>
+                <span className="text-black font-bold mb-2">
+                    {worker.startHours || 'Не вказано'}
+                </span>
+                <button
+                    onClick={() => addStartHours(worker.id, worker.startHours - 1)}
+                    disabled={worker.startHours <= 8}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mt-2"
+                >
+                    -
+                </button>
                 <br />
                 <p className="text-lg font-semibold">До:</p>
-                <input
-                    type="time"
-                    value={worker.endHours}
-                    onChange={(e) => addEndHours(worker.id, e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-64"
-                />
-                <br />
-                <p className="text-gray-600">
-                    Загальна кількість годин:
-                    {hours} год {minutes} хв
-                </p>
+                
+                <button
+                    onClick={() => addEndHours(worker.id, worker.endHours + 1)}
+                    disabled={worker.endHours >= 23}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
+                >
+                    +
+                </button>
+                <span className="text-black font-bold mb-2">
+                    {worker.endHours || 'Не вказано'}
+                </span>
+                <button
+                    onClick={() => addEndHours(worker.id, worker.endHours - 1)}
+                    disabled={worker.endHours <= 9}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mt-2"
+                >
+                    -
+                </button>
+                
                 <br />
                 <p className="text-gray-600">
                     {worker.startHours || 'Початкові години не вказані'} - {worker.endHours || 'Кінцеві години не вказані'}
                 </p>
+                <p className="text-lg font-semibold">Загальні години:</p>
+                <span className="text-black font-bold mb-2">
+                    {worker.totalHours ? `${Math.floor(worker.totalHours)} год ` : 'Не вказано'}
+                </span>
 
                 
             </div>
