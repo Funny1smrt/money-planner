@@ -4,7 +4,6 @@ const useCalculateSalary = (workers, cash) => {
     const [Salary, setSalary] = useState([]);
     const BONUS_PERCENT = 0.05;
 
-    const BONUS_PERCENT = 0.05;
 
     useEffect(() => {
         if (!workers || workers.length === 0 || cash <= 0) {
