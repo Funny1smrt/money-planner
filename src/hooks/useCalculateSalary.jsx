@@ -1,8 +1,9 @@
-// hooks/useCalculateSalary.jsx
 import { useState, useEffect } from 'react';
 
 const useCalculateSalary = (workers, cash) => {
     const [Salary, setSalary] = useState([]);
+    const BONUS_PERCENT = 0.05;
+
     const BONUS_PERCENT = 0.05;
 
     useEffect(() => {
@@ -13,55 +14,26 @@ const useCalculateSalary = (workers, cash) => {
 
         const bonusFund = cash * BONUS_PERCENT;
 
-        // Створюємо масив усіх хвилин, які працювало кафе (в хвилинах)
-        let allStart = Infinity;
-        let allEnd = -Infinity;
+        // Знаходимо годину початку та завершення всієї зміни
+        const allStart = Math.min(...workers.map(w => w.startHours));
+        const allEnd = Math.max(...workers.map(w => w.endHours));
+        const totalWorkHours = allEnd - allStart;
 
-        workers.forEach(worker => {
-            if (worker.startHours && worker.endHours) {
-                const [startH, startM] = worker.startHours.split(':').map(Number);
-                const [endH, endM] = worker.endHours.split(':').map(Number);
+        const bonusPerHour = bonusFund / totalWorkHours;
 
-                const start = startH * 60 + startM;
-                const end = endH * 60 + endM;
-
-                if (start < allStart) allStart = start;
-                if (end > allEnd) allEnd = end;
-            }
-        });
-
-        if (allStart >= allEnd) {
-            setSalary([]);
-            return;
-        }
-
-        const totalMinutes = allEnd - allStart;
-        const bonusPerMinute = bonusFund / totalMinutes;
-
-        // Ініціалізуємо карту бонусів для кожного працівника
+        // Створюємо карту бонусів
         const bonusMap = {};
-        workers.forEach(worker => bonusMap[worker.id] = 0);
 
-        // По хвилинно: хто був присутній — ділиться бонус за хвилину
-        for (let m = allStart; m < allEnd; m++) {
-            const presentWorkers = workers.filter(worker => {
-                if (!worker.startHours || !worker.endHours) return false;
-                const [startH, startM] = worker.startHours.split(':').map(Number);
-                const [endH, endM] = worker.endHours.split(':').map(Number);
-                const start = startH * 60 + startM;
-                const end = endH * 60 + endM;
-                return start <= m && m < end;
-            });
+        for (let h = allStart; h < allEnd; h++) {
+            const presentWorkers = workers.filter(w => w.startHours <= h && w.endHours > h);
+            const bonusPerWorker = presentWorkers.length > 0 ? bonusPerHour / presentWorkers.length : 0;
 
-            if (presentWorkers.length > 0) {
-                const bonusPerWorker = bonusPerMinute / presentWorkers.length;
-                presentWorkers.forEach(worker => {
-                    bonusMap[worker.id] += bonusPerWorker;
-                });
+            for (const w of presentWorkers) {
+                if (!bonusMap[w.id]) bonusMap[w.id] = 0;
+                bonusMap[w.id] += bonusPerWorker;
             }
         }
 
-        // Підрахунок зарплат
         const calculated = workers.map(worker => {
             const baseSalary = worker.totalHours * (worker.rate || 0);
             const bonus = bonusMap[worker.id] || 0;

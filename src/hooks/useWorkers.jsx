@@ -18,11 +18,11 @@ const useWorkers = () => {
     const newWorkers = Array.from({ length: count }, (_, i) => ({
       id: i + 1,
       name: `Працівник ${i + 1}`,
-      startHours: '',
-      endHours: '',
+      startHours: 8,
+      endHours: 22,
       totalHours: 0,
       salary: 0,
-      rate: 45,
+      rate: 60, // Початкова ставка 60 грн/год
     }));
 
     setWorkers(newWorkers); // Повна заміна
@@ -39,16 +39,19 @@ const useWorkers = () => {
           [type === 'start' ? 'startHours' : 'endHours']: value,
         };
 
-        if (updatedWorker.startHours && updatedWorker.endHours) {
-          const [startH, startM] = updatedWorker.startHours.split(':').map(Number);
-          const [endH, endM] = updatedWorker.endHours.split(':').map(Number);
+        // Перевірка на коректність введених годин
 
-          const start = startH * 60 + startM;
-          const end = endH * 60 + endM;
-
-          const diffInMinutes = Math.max(0, end - start);
-          updatedWorker.totalHours = parseFloat((diffInMinutes / 60).toFixed(2));
+        const startHours = parseFloat(updatedWorker.startHours) || 0;
+        const endHours = parseFloat(updatedWorker.endHours) || 0;
+        if (startHours < 0 || endHours < 0 || startHours >= endHours) {
+          alert('Будь ласка, введіть коректні години роботи');
+          return worker; // Повертаємо незмінного працівника
         }
+      
+        // Якщо години коректні, оновлюємо працівника
+        updatedWorker.startHours = startHours;
+        updatedWorker.endHours = endHours;
+        updatedWorker.totalHours = endHours - startHours; // Розрахунок загальних годин
 
         return updatedWorker;
       })
